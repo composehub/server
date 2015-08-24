@@ -1,0 +1,17 @@
+Index:
+<form action="/hsearch" method=GET>
+  <input type=search name=q>
+  <input type=submit>
+</form>
+<h1>{{.Package.Name}}</h1>
+<ul>
+  <li>
+  {{.Package.Description}}
+  </li>
+  <li>
+  Published on {{.Package.UpdatedAt}}
+  </li>
+  <li>Author: <a href="/~{{.User.Handle}}">{{.User.Handle}}</a></li>
+  <li>Downloads: {{.Package.TotalDownloads}}</li>
+  <li>Tags: {{.Package.Tags}}</li>
+</ul>

@@ -1,0 +1,14 @@
+{{.Length}} packages
+<form action="/hsearch" method=GET>
+  <input type=search name=q value="{{.Q}}">
+  <input type=submit>
+</form>
+<ul>
+{{range .Packages}}
+<li>
+<a href="/package/{{.Name}}">{{ .Name }}</a> (<a href="/~{{.User.Handle}}">{{.User.Handle}})</a><br>
+Downloads:  {{.TotalDownloads}}
+Tags: {{.Tags}}
+</li>
+{{ end }}
+</ul>

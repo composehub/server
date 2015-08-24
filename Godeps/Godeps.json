@@ -1,0 +1,33 @@
+{
+	"ImportPath": "github.com/patcito/compositor",
+	"GoVersion": "go1.5rc1",
+	"Deps": [
+		{
+			"ImportPath": "github.com/codegangsta/negroni",
+			"Comment": "v0.1-70-gc7477ad",
+			"Rev": "c7477ad8e330bef55bf1ebe300cf8aa67c492d1b"
+		},
+		{
+			"ImportPath": "github.com/julienschmidt/httprouter",
+			"Rev": "46807412fe50aaceb73bb57061c2230fd26a1640"
+		},
+		{
+			"ImportPath": "github.com/nabeken/negroni-auth",
+			"Rev": "5853007f72d2795f27831057dd16151d41ae9645"
+		},
+		{
+			"ImportPath": "github.com/pmylund/go-cache",
+			"Rev": "93d85800f2fa6bd0a739e7bd612bfa3bc008b72d"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/bcrypt",
+			"Comment": "null-236",
+			"Rev": "69e2a90ed92d03812364aeb947b7068dc42e561e"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/blowfish",
+			"Comment": "null-236",
+			"Rev": "69e2a90ed92d03812364aeb947b7068dc42e561e"
+		}
+	]
+}

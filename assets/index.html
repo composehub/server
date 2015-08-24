@@ -1,0 +1,8 @@
+Index:
+<form action="/hsearch" method=GET>
+  <input type=search name=q>
+  <input type=submit>
+</form>
+{{range .Packages}}
+<a href="/package/{{.Name}}">{{ .Name }} {{.TotalDownloads}}</a></br>
+{{ end }}
