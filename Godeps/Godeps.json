@@ -22,12 +22,12 @@
 		{
 			"ImportPath": "golang.org/x/crypto/bcrypt",
 			"Comment": "null-236",
-			"Rev": "69e2a90ed92d03812364aeb947b7068dc42e561e"
+			"Rev": "master"
 		},
 		{
 			"ImportPath": "golang.org/x/crypto/blowfish",
 			"Comment": "null-236",
-			"Rev": "69e2a90ed92d03812364aeb947b7068dc42e561e"
+			"Rev": "master"
 		}
 	]
 }

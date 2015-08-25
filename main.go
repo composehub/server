@@ -550,6 +550,20 @@ func main() {
 		}
 
 	})
+	router.GET("/main.css", func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+		path := "assets/main.css"
+	data, err := ioutil.ReadFile(path)
+
+	if err != nil {
+		log.Println("Asset not found on path: " + path)
+	} else {
+			w.Header().Set("Content-Type", "text/css")
+			w.Write(data)
+
+}
+
+
+})
 
 	router.GET("/", func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 		vars := Vars{}
