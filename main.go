@@ -56,6 +56,7 @@ type Package struct {
 	Description    string `json:"description" sql:"type:TEXT;"`
 	RepoUrl        string `json:"repo_url" sql:"type:varchar(2083);"`
 	Commit         string `json:"commit" sql:"type:varchar(255);"`
+	Private        bool   `json:"private"`
 	User           User
 	UserId         int64 `json:"user_id"`
 	TotalDownloads int64 `json:"total_downloads"`
@@ -355,7 +356,7 @@ func main() {
 		packages := []Package{}
 		q := "%" + ps.ByName("q") + "%"
 		if err := DB.Model(Package{}).Preload("User").Order("total_downloads desc").
-			Where("name like ? or description like ? or blurb like ?", q, q, q).Find(&packages).Error; err != nil {
+			Where("private = 0 and (name like ? or description like ? or blurb like ?)", q, q, q).Find(&packages).Error; err != nil {
 			R.JSON(w, http.StatusBadRequest, "[]")
 			return
 		}
@@ -433,11 +434,20 @@ func main() {
 
 	router.PUT("/users/:email/reset-password/:token", func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		r.ParseForm()
-		password := r.Form.Get("password")
+		defer r.Body.Close()
+		b, _ := ioutil.ReadAll(r.Body)
+		user := User{}
+		if err := json.Unmarshal(b, &user); err != nil {
+			log.Println(err)
+			message := "Sorry, something wrong happened, we're looking into it."
+			R.JSON(w, http.StatusBadRequest, map[string]string{"message": message})
+			return
+		}
+
+		password := user.Password
 		email := ps.ByName("email")
 		token := ps.ByName("token")
-		user := User{}
-		log.Println(password, token)
+		user = User{}
 		if password == "" || token == "" {
 			message := "Sorry, password can't be blank."
 			R.JSON(w, http.StatusBadRequest, map[string]string{"message": message})
@@ -471,9 +481,12 @@ func main() {
 	})
 
 	router.POST("/users/:email/reset-password", func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+		DB.LogMode(true)
+
 		user := User{}
 		if err := DB.Where(User{Email: ps.ByName("email")}).First(&user).Error; err != nil {
 			message := "Please check your email!"
+			log.Println(err, ps.ByName("email"))
 			R.JSON(w, http.StatusOK, map[string]string{"message": message})
 			return
 		}
@@ -491,6 +504,7 @@ func main() {
 		}
 		sgu := os.Getenv("SG_USER")
 		sgp := os.Getenv("SG_PASS")
+		log.Println(sgu, sgp)
 		sg := sendgrid.NewSendGridClient(sgu, sgp)
 		message := sendgrid.NewMail()
 		message.AddTo(user.Email)
