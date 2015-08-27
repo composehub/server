@@ -1,8 +1,245 @@
-User {{.User.Handle}}:
+<html class="no-js" lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ComposeHub</title>
+
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <!-- Place favicon.ico in the root directory -->
+
+    <!-- build:css styles/vendor.css -->
+    <!-- bower:css -->
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:css styles/main.css -->
+      <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/main.css">
+       <link href='http://fonts.googleapis.com/css?family=Lato:100,300,700' rel='stylesheet' type='text/css'>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <!-- endbuild -->
+
+  </head>
+<body>
+<!-- Index:
+<form action="/hsearch" method=GET>
+  <input type=search name=q>
+  <input type=submit>
+</form>
+<h1>{{.Package.Name}}</h1>
+<ul>
+  <li>
+  {{.Package.Description}}
+  </li>
+  <li>
+  Published on {{.Package.UpdatedAt}}
+  </li>
+  <li>Author: <a href="/~{{.User.Handle}}">{{.User.Handle}}</a></li>
+  <li>Downloads: {{.Package.TotalDownloads}}</li>
+  <li>Tags: {{.Package.Tags}}</li>
+</ul> -->
+   
+ <nav class="navbar navbar-default navbar-white navbar-fixed-top top-nav-fat" role="navigation" id="main-navigation">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navigation-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">ComposeHub</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#">Link</a></li>
+      </ul>
+  </div><!-- /.container -->
+</nav>   
+
+    
+
+    
+<div id="content">
+<div id="accordion" role="tablist" aria-multiselectable="true">
+    <section id="home" role="tab" id="headingOne">
+ <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+     <p class="close-icon">
+     <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne"><i class="fa fa-times fa-2x"></i></a>
+
+     </p>
+         <div class="container">
+            <div class="col-md-12">
+                
+                <div class="home-banner">
+  
+  <div class="home-text-section">
+    <div class="banner-text text-center">
+      <h1>
+      <span class="main-tag-line">ComposeHub is the package manager for Docker-Compose</span><br>
+      <span class="support-line">Lorem ipsum dolor sit amet</span>
+      </h1>
+    </div>
+    <div class="banner-box">
+      <div class="col-lg-8 col-md-7 box-text">
+       Lorem ipsum dolor sit amet, lorem ipsum dolor sit amet
+      </div>
+      <div class="col-lg-4 col-md-5">
+        <a href="#" class="btn btn-box btn-block btn-lg">see how it works</a>
+      </div>
+    </div>
+  </div>
+</div>        
+                
+            </div>
+        </div>
+    </div>
+ 
+<div class="home-search-section">
+  <div class="container-fluid">
+    <div class="col-md-10 col-md-offset-1 search-label-wrap">
+      <div class="label-for-search col-md-4 clearfix">
+        <h5>LOOKING FOR A NEW EXPERIENCE?</h5>
+      </div>
+      <div class="col-md-8">
+        <div class="search-input-wrap">
+            <form action="/hsearch" method=GET>
+                <div class="form-group has-feedback">
+
+	<input type="text" class="form-control form-search" placeholder="Find Packages" name="q">
+                    <span class="fa fa-search fa-lg form-control-feedback" id="q" aria-hidden="true"></span>
+  <span id="inputSuccess2Status" class="sr-only">(search)</span>
+                </div>
+            </form>
+	<div id="dropdownsearchlist" class="result-for-events">
+		<div class="label-for-search"></div>
+	</div>
+</div>
+      </div>
+    </div>
+  </div>
+</div>  
+</section>
+</div> 
+
+<section id="user">
+    <div class="container">
+        
+<div class="col-md-8">
+			<span class="user-name">{{.User.Handle}}aljord</span>
+                                            
+            <p class="spacer">__</p>
+								
+            <span class="user-package-qty">678 packages by patcitoaljord</span>
+    
+    <ul class="user-packages-list">
+        <li>
+            <a href="#">accountdown</a>
+            <strong>v4.1.0</strong>
+            <span class="user-package-description"> - persistent accounts backed to leveldb</span>
+         
+        
+        </li>
+         <li>
+             <a href="#">accountdown-basic</a>
+             <strong>v1.1.0</strong>
+             
+          - username/password authentication for accountdown using salted hashes
+        
+        </li>
+         <li>
+             <a href="#">accountdown</a>
+            <strong>v4.1.0</strong>
+            
+          - persistent accounts backed to leveldb
+        </li>
+         <li>
+        <a href="#">accountdown-basic</a>
+             <strong>v1.1.0</strong>
+             
+          - username/password authentication for accountdown using salted hashes
+        </li>
+        <a href="#" class="btn btn-packages btn-block btn-lg">view more packages</a>
+    </ul>
+
+						</div>
+        
+<div class="col-md-4">
+    
+    <ul class="user-box">
+      <li class="user-img">
+        <a href="/~{{.User.Handle}}">
+          <img src="https://s.gravatar.com/avatar/c4b64c6e47d970bb0d07a2b9d559be9b?size=100&amp;default=retro" alt="author">
+        </a>
+      </li>
+        <li>
+      <span class="user-name-box">
+          <a href="/~{{.User.Handle}}">{{.User.Handle}}</a>
+            </span>
+    </li>
+
+      <li>
+        <a href="#">patcito@gmail.com</a>
+      </li>
+
+        <li>
+          <a href="#">patcito</a> on freenode
+        </li>
+         <li>
+          <a href="#">patcito.net</a>
+        </li>
+        <li>
+          <a href="#">@patcito</a> on GitHub
+        </li>
+
+        <li>
+          <a href="#">@patcito</a> on Twitter
+        </li>
+        <li>
+      <a href="#" class="active">@patcito</a> on npm
+    </li>
+
+  </ul>
+
+  <!-- User {{.User.Handle}}:
 <form action="/hsearch" method=GET>
   <input type=search name=q>
   <input type=submit>
 </form>
 {{range .Packages}}
 <a href="/package/{{.Name}}">{{ .Name }} {{.TotalDownloads}}</a></br>
-{{ end }}
+{{ end }} -->
+        
+       
+
+    </div>
+</div> 
+</section>
+  
+    
+    <footer id="footer">
+            <div class="footer-top"></div>
+            <div class="footer-bottom">
+                            <p class="footer-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit <a href="http://www.github.com">Source</a>. Copyright 2015</p>
+            </div>
+        </footer>
+
+   
+    
+    </div> 
+    
+    </body>
+</html>
+
