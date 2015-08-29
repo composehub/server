@@ -401,7 +401,7 @@ func main() {
 		if err := DB.Where(Package{UserId: vars.User.Id}).Find(&vars.Packages).Error; err != nil {
 			log.Println(err)
 		}
-
+		vars.Length = len(vars.Packages)
 		html, err := readAsset(vars, path)
 		if err == nil {
 			w.Header().Set("Content-Type", "text/html")
@@ -552,18 +552,17 @@ func main() {
 	})
 	router.GET("/main.css", func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 		path := "assets/main.css"
-	data, err := ioutil.ReadFile(path)
+		data, err := ioutil.ReadFile(path)
 
-	if err != nil {
-		log.Println("Asset not found on path: " + path)
-	} else {
+		if err != nil {
+			log.Println("Asset not found on path: " + path)
+		} else {
 			w.Header().Set("Content-Type", "text/css")
 			w.Write(data)
 
-}
+		}
 
-
-})
+	})
 
 	router.GET("/", func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 		vars := Vars{}
