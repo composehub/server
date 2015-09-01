@@ -16,6 +16,7 @@ import (
 
 	"github.com/codegangsta/negroni"
 	"github.com/extemporalgenome/slug"
+	gr "github.com/ftrvxmtrx/gravatar"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 	"github.com/julienschmidt/httprouter"
@@ -52,7 +53,7 @@ type Package struct {
 	Name           string `json:"name" sql:"type:varchar(255);"`
 	Email          string `json:"email" sql:"type:varchar(255);"`
 	Tags           string `json:"tags" sql:"type:varchar(255);"`
-	Blurb          string `json:"blurb" sql:"type:varchar(100)"`
+	Blurb          string `json:"blurb" sql:"type:varchar(200)"`
 	Description    string `json:"description" sql:"type:TEXT;"`
 	RepoUrl        string `json:"repo_url" sql:"type:varchar(2083);"`
 	Commit         string `json:"commit" sql:"type:varchar(255);"`
@@ -599,7 +600,11 @@ func readAsset(vars Vars, path string) (string, error) {
 		return "", err
 	}
 
-	t := template.New("Webpage template")
+	t := template.New("Webpage template").Funcs(template.FuncMap{
+		"inc":      inc,
+		"split":    split,
+		"gravatar": gravatar,
+	})
 	ti, errT := t.Parse(string(data))
 	if errT != nil {
 		log.Println("Parse fail", errT)
@@ -628,4 +633,20 @@ func newUUID() (string, error) {
 	// version 4 (pseudo-random); see section 4.1.3
 	uuid[6] = uuid[6]&^0xf0 | 0x40
 	return fmt.Sprintf("%x-%x-%x-%x-%x", uuid[0:4], uuid[4:6], uuid[6:8], uuid[8:10], uuid[10:]), nil
+}
+
+func inc(x int) int {
+	return x + 1
+}
+
+func split(s string) []string {
+	tags := strings.Split(s, ",")
+	return tags
+
+}
+
+func gravatar(e, s string) string {
+	emailHash := gr.EmailHash(e)
+	url := "https://www.gravatar.com/avatar/" + emailHash + "?default=retro&amp;s=" + s
+	return url
 }

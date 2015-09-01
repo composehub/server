@@ -128,10 +128,9 @@
         <br><small>5 hours ago  by <a href="/~{{.User.Handle}}" class="author">{{.User.Handle}}</a></small>
         <br><i class="fa fa-download"></i>&nbsp;Downloads: {{.TotalDownloads}}
         <div class="search-package-labels">
-          <a href="#"><span class="label label-default">{{.Tags}}</span></a>
-          <a href="#"><span class="label label-default">{{.Tags}}</span></a>
-          <a href="#"><span class="label label-default">{{.Tags}}</span></a>
-          <a href="#"><span class="label label-default">{{.Tags}}</span></a>
+          {{range $index, $element  := split .Tags}}
+            <a href="/hsearch?q={{$element}}"><span class="label label-default">{{$element}}</span></a>
+          {{end}}
         </div>
         <br> &nbsp;
       </div>
@@ -139,7 +138,7 @@
 
 
       <nav>
-        <ul class="pagination">
+        <ul class="hide pagination">
           <li class="disabled">
           <span>
             <span aria-hidden="true">&laquo;</span>

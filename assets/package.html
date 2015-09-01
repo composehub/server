@@ -178,7 +178,7 @@
       <ul class="box publisher">
         <li class="last-publisher">
         <a href="/~{{.User.Handle}}">
-          <img src="https://s.gravatar.com/avatar/c4b64c6e47d970bb0d07a2b9d559be9b?size=100&amp;default=retro" alt="last publisher">
+          <img src="{{gravatar .User.Email "20"}}" alt="last publisher">
           <span><a href="/~{{.User.Handle}}">{{.User.Handle}}</a></span>
         </a>
         published
@@ -254,12 +254,9 @@
         <h5>Tag Cloud</h5>
 
         <div class="tag-cloud">
-          <a href="archive.html">Entertainment</a>
-          <a href="archive.html">Sports</a>
-          <a href="archive.html">Travel</a>
-          <a href="archive.html">Lifestyle</a>
-          <a href="archive.html">Movies</a>
-          <a href="archive.html">Music</a>
+          {{range $index, $element  := split .Package.Tags}}
+          <a href="/hsearch?q={{$element}}">{{$element}}</a>
+          {{end}}
           <!--<ul>
                                     <li>{{.Package.Tags}}</li>
                                 </ul>-->
