@@ -125,7 +125,7 @@
       {{range .Packages}}
       <div class="search-package-information">
         <a href="/package/{{.Name}}" class="search-package-title" title="package">{{.Name}}</a> {{.Blurb}}
-        <br><small>5 hours ago  by <a href="/~{{.User.Handle}}" class="author">{{.User.Handle}}</a></small>
+        <br><small>{{timeAgo .UpdatedAt}}  by <a href="/~{{.User.Handle}}" class="author">{{.User.Handle}}</a></small>
         <br><i class="fa fa-download"></i>&nbsp;Downloads: {{.TotalDownloads}}
         <div class="search-package-labels">
           {{range $index, $element  := split .Tags}}

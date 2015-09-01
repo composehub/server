@@ -15,6 +15,7 @@ import (
 	"time"
 
 	"github.com/codegangsta/negroni"
+	"github.com/dustin/go-humanize"
 	"github.com/extemporalgenome/slug"
 	gr "github.com/ftrvxmtrx/gravatar"
 	_ "github.com/go-sql-driver/mysql"
@@ -604,6 +605,7 @@ func readAsset(vars Vars, path string) (string, error) {
 		"inc":      inc,
 		"split":    split,
 		"gravatar": gravatar,
+		"timeAgo":  timeAgo,
 	})
 	ti, errT := t.Parse(string(data))
 	if errT != nil {
@@ -649,4 +651,8 @@ func gravatar(e, s string) string {
 	emailHash := gr.EmailHash(e)
 	url := "https://www.gravatar.com/avatar/" + emailHash + "?default=retro&amp;s=" + s
 	return url
+}
+
+func timeAgo(t time.Time) string {
+	return humanize.Time(t)
 }
