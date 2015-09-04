@@ -546,8 +546,10 @@ func main() {
 	router.GET("/package/:name", func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		vars := Vars{}
 		name := ps.ByName("name")
-		if err := DB.Model(Package{}).Where(Package{Name: name}).Find(&vars.Package).Error; err != nil {
-			log.Println(err)
+		DB.LogMode(true)
+
+		if err := DB.Model(Package{}).Where(Package{Name: name}).First(&vars.Package).Error; err != nil {
+			log.Println("err:", err)
 			message := "Sorry, something went wrong, we're looking into it."
 			R.JSON(w, http.StatusInternalServerError, map[string]string{"message": message})
 			return
