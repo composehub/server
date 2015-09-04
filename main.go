@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"crypto/rand"
 	"encoding/json"
 	"fmt"
@@ -123,8 +122,25 @@ var (
 	DB gorm.DB
 	R  *render.Render
 )
+var T = make(map[string]*template.Template)
 
 func init() {
+	funcs := template.FuncMap{
+		"inc":      inc,
+		"split":    split,
+		"gravatar": gravatar,
+		"timeAgo":  timeAgo,
+	}
+	T["index.html"], _ = template.New("base.html").Funcs(funcs).ParseFiles("assets/index.html", "assets/base.html")
+	T["search.html"], _ = template.New("base.html").Funcs(funcs).ParseFiles("assets/search.html", "assets/base.html")
+	T["package.html"], _ = template.New("base.html").Funcs(funcs).ParseFiles("assets/package.html", "assets/base.html")
+	T["user.html"], _ = template.New("base.html").Funcs(funcs).ParseFiles("assets/user.html", "assets/base.html")
+
+	//T["package.html"] = template.Must(template.ParseFiles("assets/package.html", "assets/base.html"))
+	//T["user.html"] = template.Must(template.ParseFiles("assets/user.html", "assets/base.html"))
+	//T["user.html"] = setFuncs(T["user.html"])
+	//T["package.html"] = setFuncs(T["package.html"])
+
 	db, err := gorm.Open("mysql", "root:root@/compositor?charset=utf8mb4&parseTime=True&loc=Local")
 	if err != nil {
 		log.Fatalln(err)
@@ -369,7 +385,6 @@ func main() {
 
 	router.GET("/hsearch", func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		vars := Vars{}
-		path := "assets/search.html"
 		r.ParseForm()
 		q := r.Form.Get("q")
 		vars.Q = q
@@ -378,23 +393,24 @@ func main() {
 		DB.LogMode(true)
 		if err := DB.Model(Package{}).Preload("User").Select("packages.*, users.handle").
 			Joins("left join users on users.id = packages.user_id").
-			Order("total_downloads desc").Where("name like ? or description like ?", q, q).
+			Order("total_downloads desc").Where("name like ? or description like ? or tags like ?", q, q, q).
 			Find(&vars.Packages).Error; err != nil {
 			log.Println(err)
 		}
 		vars.Length = len(vars.Packages)
-		html, err := readAsset(vars, path)
-		if err == nil {
-			w.Header().Set("Content-Type", "text/html")
-			w.Write([]byte(html))
-		} else {
-			return
-		}
+		T["search.html"].ExecuteTemplate(w, "base", vars)
+
+		//html, err := readAsset(vars, path)
+		//if err == nil {
+		//w.Header().Set("Content-Type", "text/html")
+		//w.Write([]byte(html))
+		//} else {
+		//return
+		//}
 	})
 
 	router.GET("/~:handle", func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		handle := ps.ByName("handle")
-		path := "assets/user.html"
 		vars := Vars{}
 		if err := DB.Where(User{Handle: handle}).First(&vars.User).Error; err != nil {
 			R.JSON(w, http.StatusNotFound, "User not found.")
@@ -404,13 +420,15 @@ func main() {
 			log.Println(err)
 		}
 		vars.Length = len(vars.Packages)
-		html, err := readAsset(vars, path)
-		if err == nil {
-			w.Header().Set("Content-Type", "text/html")
-			w.Write([]byte(html))
-		} else {
-			return
-		}
+		T["user.html"].ExecuteTemplate(w, "base", vars)
+
+		//html, err := readAsset(vars, path)
+		//if err == nil {
+		//w.Header().Set("Content-Type", "text/html")
+		//w.Write([]byte(html))
+		//} else {
+		//return
+		//}
 
 	})
 
@@ -527,9 +545,7 @@ func main() {
 
 	router.GET("/package/:name", func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		vars := Vars{}
-		var path string
 		name := ps.ByName("name")
-		path = "assets/package.html"
 		if err := DB.Model(Package{}).Where(Package{Name: name}).Find(&vars.Package).Error; err != nil {
 			log.Println(err)
 			message := "Sorry, something went wrong, we're looking into it."
@@ -542,14 +558,14 @@ func main() {
 			R.JSON(w, http.StatusInternalServerError, map[string]string{"message": message})
 			return
 		}
-		//log.Println("Asset: ", string(data))
-		html, err := readAsset(vars, path)
-		if err == nil {
-			w.Header().Set("Content-Type", "text/html")
-			w.Write([]byte(html))
-		} else {
-			return
-		}
+		T["package.html"].ExecuteTemplate(w, "base", vars)
+
+		//if err == nil {
+		//w.Header().Set("Content-Type", "text/html")
+		//w.Write([]byte(html))
+		//} else {
+		//return
+		//}
 
 	})
 	router.GET("/main.css", func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
@@ -568,22 +584,23 @@ func main() {
 
 	router.GET("/", func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 		vars := Vars{}
-		var path string
-		path = "assets/index.html"
+		//var path string
+		//path = "assets/index.html"
 		if err := DB.Model(Package{}).Limit(10).Order("total_downloads desc").Find(&vars.Packages).Error; err != nil {
 			log.Println(err)
 			message := "Sorry, something went wrong, we're looking into it."
 			R.JSON(w, http.StatusInternalServerError, map[string]string{"message": message})
 			return
 		}
+		T["index.html"].ExecuteTemplate(w, "base", vars)
 		//log.Println("Asset: ", string(data))
-		html, err := readAsset(vars, path)
-		if err == nil {
-			w.Header().Set("Content-Type", "text/html")
-			w.Write([]byte(html))
-		} else {
-			return
-		}
+		//html, err := readAsset(vars, path)
+		//if err == nil {
+		//w.Header().Set("Content-Type", "text/html")
+		//w.Write([]byte(html))
+		//} else {
+		//return
+		//}
 
 	})
 
@@ -594,36 +611,39 @@ func main() {
 }
 
 func readAsset(vars Vars, path string) (string, error) {
-	data, err := ioutil.ReadFile(path)
+	//_, err := ioutil.ReadFile(path)
 
-	if err != nil {
-		log.Println("Asset not found on path: " + path)
-		return "", err
-	}
+	//if err != nil {
+	//log.Println("Asset not found on path: " + path)
+	//return "", err
+	//}
+	//ti, errT := t.Parse(string(data))
+	//if errT != nil {
+	//log.Println("Parse fail", errT)
+	//return "", err
+	//}
 
-	t := template.New("Webpage template").Funcs(template.FuncMap{
+	//err = ti.Execute(&doc, vars)
+	//if err != nil {
+	//log.Println("fail executing", err)
+	//return "", err
+	//// Asset was not found.
+	//}
+	//html := doc.String()
+	return "", nil
+
+}
+
+func setFuncs(t *template.Template) *template.Template {
+	t.Funcs(template.FuncMap{
 		"inc":      inc,
 		"split":    split,
 		"gravatar": gravatar,
 		"timeAgo":  timeAgo,
 	})
-	ti, errT := t.Parse(string(data))
-	if errT != nil {
-		log.Println("Parse fail", errT)
-		return "", err
-	}
-
-	var doc bytes.Buffer
-	err = ti.Execute(&doc, vars)
-	if err != nil {
-		log.Println("fail executing", err)
-		return "", err
-		// Asset was not found.
-	}
-	html := doc.String()
-	return html, err
-
+	return t
 }
+
 func newUUID() (string, error) {
 	uuid := make([]byte, 16)
 	n, err := io.ReadFull(rand.Reader, uuid)
