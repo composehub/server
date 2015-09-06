@@ -1,0 +1,16 @@
+db:
+  image: mariadb
+  environment:
+    MYSQL_ROOT_PASSWORD: root
+    MYSQL_USER: root
+    MYSQL_DATABASE: composehub
+  volumes:
+      - /var/composehub:/var/lib/mysql
+web:
+  build: .
+  command: ./composehub
+  ports:
+    - "3000:3000"
+  links:
+    - db:mysql
+

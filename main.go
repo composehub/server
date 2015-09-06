@@ -119,8 +119,9 @@ func checkUser(email string) (int8, error) {
 }
 
 var (
-	DB gorm.DB
-	R  *render.Render
+	DB                            gorm.DB
+	R                             *render.Render
+	DbUser, DbPass, DbURL, DbName string
 )
 var T = make(map[string]*template.Template)
 
@@ -141,9 +142,32 @@ func init() {
 	//T["user.html"] = setFuncs(T["user.html"])
 	//T["package.html"] = setFuncs(T["package.html"])
 
-	db, err := gorm.Open("mysql", "root:root@/compositor?charset=utf8mb4&parseTime=True&loc=Local")
+	DbUser = os.Getenv("")
+	DbPass = os.Getenv("COMPOSITOR_DB_1_ENV_MYSQL_ROOT_PASSWORD")
+	DbURL = os.Getenv("COMPOSITOR_DB_1_PORT_3306_TCP_ADDR")
+	DbName = os.Getenv("COMPOSITOR_DB_1_ENV_MYSQL_DATABASE")
+	if DbUser == "" {
+		DbUser = "root"
+	}
+	if DbPass == "" {
+		DbPass = "root"
+	}
+	if DbName == "" {
+		DbName = "composehub"
+	}
+	if DbURL == "" {
+		DbURL = "localhost"
+	}
+	log.Println(DbUser + ":" + DbPass + "@" + DbURL + "/" + DbName + "?charset=utf8mb4&parseTime=True&loc=Local")
+	db, err := gorm.Open("mysql", DbUser+":"+DbPass+"@tcp("+DbURL+":3306)/?charset=utf8mb4&parseTime=True&loc=Local")
 	if err != nil {
+		log.Println(DbUser + ":" + DbPass + "@" + DbURL + "/" + DbName + "?charset=utf8mb4&parseTime=True&loc=Local")
 		log.Fatalln(err)
+	}
+	db.Exec("CREATE DATABASE if not exists `" + DbName + "` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci")
+	err = db.Exec("USE " + DbName).Error
+	if err != nil {
+		panic(err)
 	}
 	db.DB()
 	DB = db
