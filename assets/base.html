@@ -8,6 +8,7 @@
   <!-- Place favicon.ico in the root directory -->
   <!-- build:css styles/main.css -->
   <!-- Latest compiled and minified CSS -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 
   <!-- Optional theme -->
@@ -19,7 +20,6 @@
   <link href='http://fonts.googleapis.com/css?family=Lato:100,300,700' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
   <!-- endbuild -->
-
   {{template "head" .}}
 </head>
   <body>
@@ -45,61 +45,65 @@
   </nav>
 
 
-
-
   <div id="content">
-
-    <section id="home">
-      <div class="container">
-        <div class="col-md-12">
-
-          <div class="home-banner">
-
-            <div class="home-text-section">
-              <div class="banner-text text-center">
-                <h1>
-                  <span class="main-tag-line">ComposeHub is the package manager for Docker-Compose</span><br>
-                  <span class="support-line">Search, install and publish your own Docker compositions.</span>
-                </h1>
-              </div>
-              <div class="banner-box">
-                <div class="col-lg-8 col-md-7 box-text">
-                  Install and run your favorite open source or private apps, web frameworks and more!
-                </div>
-                <div class="col-lg-4 col-md-5">
-                  <a href="#" class="btn btn-box btn-block btn-lg">see how it works</a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-      <div class="home-search-section">
-        <div class="container-fluid">
-          <div class="col-md-10 col-md-offset-1 search-label-wrap">
-            <div class="label-for-search col-md-4 clearfix">
-              <h5>LOOKING FOR A NEW EXPERIENCE?</h5>
-            </div>
-            <div class="col-md-8">
-              <div class="search-input-wrap">
-                <form action="/hsearch" method=GET>
-                  <div class="form-group has-feedback">
-
-                    <input type="text" class="form-control form-search" placeholder="Find Packages" name="q">
-                    <span class="fa fa-search fa-lg form-control-feedback" id="q" aria-hidden="true"></span>
-                    <span id="inputSuccess2Status" class="sr-only">(search)</span>
+    <div role="tablist" aria-multiselectable="true" id="accordion">
+      <section id="home" role="tab">
+        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+          <p class="close-icon">
+          <a id="collapse-link" role="button"
+             href="" aria-expanded="true" aria-controls="collapseOne"><i class="fa fa-times fa-2x"></i></a>
+          </p>
+          <div class="container">
+            <div class="col-md-12">
+              <div class="home-banner">
+                <div class="home-text-section">
+                  <div class="banner-text text-center">
+                    <h1>
+                      <span class="main-tag-line">ComposeHub is the package manager for Docker-Compose</span><br>
+                      <span class="support-line">Lorem ipsum dolor sit amet</span>
+                    </h1>
                   </div>
-                </form>
-                <div id="dropdownsearchlist" class="result-for-events">
-                  <div class="label-for-search"></div>
+                  <div class="banner-box">
+                    <div class="col-lg-8 col-md-7 box-text">
+                      Lorem ipsum dolor sit amet, lorem ipsum dolor sit amet
+                    </div>
+                    <div class="col-lg-4 col-md-5">
+                      <a href="#" class="btn btn-box btn-block btn-lg">see how it works</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="home-search-section">
+          <div class="container-fluid">
+            <div class="col-md-10 col-md-offset-1 search-label-wrap">
+              <div class="label-for-search col-md-4 clearfix">
+                <h5>LOOKING FOR A NEW EXPERIENCE?</h5>
+              </div>
+              <div class="col-md-8">
+                <div class="search-input-wrap">
+                  <form action="/hsearch" method="GET">
+                    <div class="form-group has-feedback">
+
+                      <input type="text" class="form-control form-search" placeholder="Find Packages" name="q">
+                      <span class="fa fa-search fa-lg form-control-feedback" id="q" aria-hidden="true"></span>
+                      <span id="inputSuccess2Status" class="sr-only">(search)</span>
+                    </div>
+                  </form>
+                  <div id="dropdownsearchlist" class="result-for-events">
+                    <div class="label-for-search"></div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
     {{template "body" .}}
     <footer id="footer">
       <div class="footer-top"></div>
@@ -107,6 +111,18 @@
         <p class="footer-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit <a href="http://www.github.com">Source</a>. Copyright 2015</p>
       </div>
     </footer>
+  <script>
+if (localStorage.collapseJumbotron) {
+$('#collapseOne').hide()
+}
+$("#collapse-link").click(function(event){
+$('#collapseOne').collapse()
+localStorage.setItem("collapseJumbotron", "true");
+event.preventDefault()
+return false;
+});
+  </script>
+
     </body>
     </html>
     {{end}}
