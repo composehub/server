@@ -97,7 +97,7 @@ func authUser(email, password string) (User, error) {
 	var user User
 	if err := DB.Model(User{}).Where(&User{Email: email}).First(&user).Error; err == nil {
 	} else {
-		log.Println(err)
+		devlog(err)
 	}
 	err := bcrypt.CompareHashAndPassword([]byte(user.EncryptedPassword), []byte(password))
 	if err == nil {
@@ -113,19 +113,20 @@ func checkUser(email string) (int8, error) {
 	if err = DB.Model(User{}).Where(&User{Email: email}).Count(&count).Error; err == nil {
 		//fmt.Println("success check user", count)
 	} else {
-		//log.Println(err)
+		//devlog(err)
 	}
 	return count, err
 }
 
 var (
-	DB                            gorm.DB
-	R                             *render.Render
-	DbUser, DbPass, DbURL, DbName string
+	DB                                 gorm.DB
+	R                                  *render.Render
+	DbUser, DbPass, DbURL, DbName, Dev string
 )
 var T = make(map[string]*template.Template)
 
 func init() {
+	Dev = os.Getenv("DEV")
 	funcs := template.FuncMap{
 		"inc":      inc,
 		"split":    split,
@@ -158,10 +159,9 @@ func init() {
 	if DbURL == "" {
 		DbURL = "localhost"
 	}
-	log.Println(DbUser + ":" + DbPass + "@" + DbURL + "/" + DbName + "?charset=utf8mb4&parseTime=True&loc=Local")
 	db, err := gorm.Open("mysql", DbUser+":"+DbPass+"@tcp("+DbURL+":3306)/?charset=utf8mb4&parseTime=True&loc=Local")
 	if err != nil {
-		log.Println(DbUser + ":" + DbPass + "@" + DbURL + "/" + DbName + "?charset=utf8mb4&parseTime=True&loc=Local")
+		devlog(DbUser + ":" + DbPass + "@" + DbURL + "/" + DbName + "?charset=utf8mb4&parseTime=True&loc=Local")
 		log.Fatalln(err)
 	}
 	db.Exec("CREATE DATABASE if not exists `" + DbName + "` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci")
@@ -171,6 +171,10 @@ func init() {
 	}
 	db.DB()
 	DB = db
+	if Dev != "" {
+		DB.LogMode(true)
+	}
+
 	DB.AutoMigrate(&User{})
 	DB.AutoMigrate(&Package{})
 	DB.AutoMigrate(&Download{})
@@ -181,20 +185,20 @@ func init() {
 }
 
 func main() {
+	devlog("lol")
 	router := httprouter.New()
 	router.POST("/publish/:name", func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-		DB.LogMode(true)
 		r.ParseForm()
 		defer r.Body.Close()
 		b, _ := ioutil.ReadAll(r.Body)
+		devlog(string(b))
 		postedpkg := Package{}
 		if err := json.Unmarshal(b, &postedpkg); err != nil {
-			log.Println(string(b))
+			devlog(string(b), err)
 			message := "Sorry, something wrong happened"
 			R.JSON(w, http.StatusInternalServerError, map[string]string{"message": message})
 			return
 		}
-
 		u, p, ok := r.BasicAuth()
 		if ok && p == "" {
 			requireAuth(w)
@@ -202,7 +206,7 @@ func main() {
 			if user, err := authUser(u, p); err != nil {
 				requireAuth(w)
 			} else {
-				log.Println("FOUND", user.Id, postedpkg.Name)
+				devlog("FOUND", user.Id, postedpkg.Name)
 				pkg := Package{}
 				if err := DB.Where(&Package{UserId: user.Id, Name: ps.ByName("name")}).First(&pkg).Error; err != nil &&
 					err != gorm.RecordNotFound {
@@ -210,6 +214,7 @@ func main() {
 					return
 				} else {
 					pkg.UserId = user.Id
+					pkg.Private = postedpkg.Private
 					if postedpkg.Name != "" {
 						pkg.Name = slug.Slug(postedpkg.Name)
 					}
@@ -243,18 +248,18 @@ func main() {
 						if strings.Contains(err.Error(), "Duplicate") {
 							switch {
 							case strings.Contains(err.Error(), "name"):
-								log.Println(pkg.Id, pkg)
+								devlog(pkg.Id, pkg)
 								message := "sorry, a package with the same name " + pkg.Name + " already exists."
 								R.JSON(w, http.StatusBadRequest, message)
 								return
 							}
 
-							log.Println(err, pkg.Id, pkg.Name, pkg)
+							devlog(err, pkg.Id, pkg.Name, pkg)
 							R.JSON(w, http.StatusNotFound, "package "+pkg.Name+" not found")
 							return
 						}
 					} else {
-						log.Println("ok, package published!", pkg)
+						devlog("ok, package published!", pkg)
 						R.JSON(w, http.StatusOK, pkg)
 						return
 					}
@@ -309,7 +314,7 @@ func main() {
 
 			ep, err := bcrypt.GenerateFromPassword([]byte(newUser.Password), 10)
 			if err != nil {
-				log.Println(err)
+				devlog(err)
 				R.JSON(w, http.StatusInternalServerError, err)
 				return
 			}
@@ -367,7 +372,7 @@ func main() {
 				if password != "" {
 					ep, err := bcrypt.GenerateFromPassword([]byte(password), 10)
 					if err != nil {
-						log.Println(err)
+						devlog(err)
 						R.JSON(w, http.StatusInternalServerError, err)
 						return
 					}
@@ -377,7 +382,7 @@ func main() {
 					R.JSON(w, http.StatusOK, user)
 					return
 				} else {
-					log.Println(err.Error())
+					devlog(err.Error())
 					message := "sorry, something went wrong, we're looking into it."
 					if strings.Contains(err.Error(), "Duplicate") {
 						switch {
@@ -414,12 +419,11 @@ func main() {
 		vars.Q = q
 		q = "%" + q + "%"
 
-		DB.LogMode(true)
 		if err := DB.Model(Package{}).Preload("User").Select("packages.*, users.handle").
 			Joins("left join users on users.id = packages.user_id").
-			Order("total_downloads desc").Where("name like ? or description like ? or tags like ?", q, q, q).
+			Order("total_downloads desc").Where("private = 0 and (name like ? or description like ? or tags like ?)", q, q, q).
 			Find(&vars.Packages).Error; err != nil {
-			log.Println(err)
+			devlog(err)
 		}
 		vars.Length = len(vars.Packages)
 		T["search.html"].ExecuteTemplate(w, "base", vars)
@@ -440,8 +444,8 @@ func main() {
 			R.JSON(w, http.StatusNotFound, "User not found.")
 			return
 		}
-		if err := DB.Where(Package{UserId: vars.User.Id}).Find(&vars.Packages).Error; err != nil {
-			log.Println(err)
+		if err := DB.Where("user_id = ? and private = ?", vars.User.Id, 0).Find(&vars.Packages).Error; err != nil {
+			devlog(err)
 		}
 		vars.Length = len(vars.Packages)
 		T["user.html"].ExecuteTemplate(w, "base", vars)
@@ -458,20 +462,38 @@ func main() {
 
 	router.GET("/packages/:name", func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		name := ps.ByName("name")
-		p := Package{}
-		if err := DB.Where(Package{Name: name}).First(&p).Error; err != nil {
+		pkg := Package{}
+		if err := DB.Where(Package{Name: name}).First(&pkg).Error; err != nil {
 			R.JSON(w, http.StatusBadRequest, "{}")
 			return
 		}
-		if err := DB.Exec("update packages set total_downloads = total_downloads + 1 where name = ?", name).Error; err != nil {
-			log.Println(err)
+		if pkg.Private {
+			u, p, ok := r.BasicAuth()
+			if ok && p == "" {
+				requireAuth(w)
+				return
+			} else {
+				if user, err := authUser(u, p); err != nil {
+					requireAuth(w)
+					return
+				} else {
+					if user.Id != pkg.UserId {
+						requireAuth(w)
+						return
+					}
+				}
+
+			}
 		}
-		var dl = Download{PackageId: p.Id}
+		if err := DB.Exec("update packages set total_downloads = total_downloads + 1 where name = ?", name).Error; err != nil {
+			devlog(err)
+		}
+		var dl = Download{PackageId: pkg.Id}
 		if err := DB.Save(&dl).Error; err != nil {
-			log.Println(err)
+			devlog(err)
 		}
 
-		R.JSON(w, http.StatusOK, p)
+		R.JSON(w, http.StatusOK, pkg)
 		return
 
 	})
@@ -482,7 +504,7 @@ func main() {
 		b, _ := ioutil.ReadAll(r.Body)
 		user := User{}
 		if err := json.Unmarshal(b, &user); err != nil {
-			log.Println(err)
+			devlog(err)
 			message := "Sorry, something wrong happened, we're looking into it."
 			R.JSON(w, http.StatusBadRequest, map[string]string{"message": message})
 			return
@@ -507,7 +529,7 @@ func main() {
 		user.Password = password
 		ep, err := bcrypt.GenerateFromPassword([]byte(user.Password), 10)
 		if err != nil {
-			log.Println(err)
+			devlog(err)
 			R.JSON(w, http.StatusInternalServerError, err)
 			return
 		}
@@ -525,12 +547,10 @@ func main() {
 	})
 
 	router.POST("/users/:email/reset-password", func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-		DB.LogMode(true)
-
 		user := User{}
 		if err := DB.Where(User{Email: ps.ByName("email")}).First(&user).Error; err != nil {
 			message := "Please check your email!"
-			log.Println(err, ps.ByName("email"))
+			devlog(err, ps.ByName("email"))
 			R.JSON(w, http.StatusOK, map[string]string{"message": message})
 			return
 		}
@@ -548,7 +568,7 @@ func main() {
 		}
 		sgu := os.Getenv("SG_USER")
 		sgp := os.Getenv("SG_PASS")
-		log.Println(sgu, sgp)
+		devlog(sgu, sgp)
 		sg := sendgrid.NewSendGridClient(sgu, sgp)
 		message := sendgrid.NewMail()
 		message.AddTo(user.Email)
@@ -570,16 +590,15 @@ func main() {
 	router.GET("/package/:name", func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		vars := Vars{}
 		name := ps.ByName("name")
-		DB.LogMode(true)
 
 		if err := DB.Model(Package{}).Where(Package{Name: name}).First(&vars.Package).Error; err != nil {
-			log.Println("err:", err)
+			devlog("err:", err)
 			message := "Sorry, something went wrong, we're looking into it."
 			R.JSON(w, http.StatusInternalServerError, map[string]string{"message": message})
 			return
 		}
 		if err := DB.Model(User{}).Where(User{Id: vars.Package.UserId}).Find(&vars.User).Error; err != nil {
-			log.Println(err)
+			devlog(err)
 			message := "Sorry, something went wrong, we're looking into it."
 			R.JSON(w, http.StatusInternalServerError, map[string]string{"message": message})
 			return
@@ -599,7 +618,7 @@ func main() {
 		data, err := ioutil.ReadFile(path)
 
 		if err != nil {
-			log.Println("Asset not found on path: " + path)
+			devlog("Asset not found on path: " + path)
 		} else {
 			w.Header().Set("Content-Type", "text/css")
 			w.Write(data)
@@ -608,18 +627,26 @@ func main() {
 
 	})
 
+	router.GET("/checkupdate/:version", func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+		latest := "0.2"
+		if p.ByName("version") == latest {
+			R.JSON(w, http.StatusOK, "ok")
+		} else {
+			R.JSON(w, http.StatusOK, latest)
+		}
+	})
 	router.GET("/", func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 		vars := Vars{}
 		//var path string
 		//path = "assets/index.html"
-		if err := DB.Model(Package{}).Limit(10).Order("total_downloads desc").Find(&vars.Packages).Error; err != nil {
-			log.Println(err)
+		if err := DB.Where("private = ?", 0).Limit(10).Order("total_downloads desc").Find(&vars.Packages).Error; err != nil {
+			devlog(err)
 			message := "Sorry, something went wrong, we're looking into it."
 			R.JSON(w, http.StatusInternalServerError, map[string]string{"message": message})
 			return
 		}
 		T["index.html"].ExecuteTemplate(w, "base", vars)
-		//log.Println("Asset: ", string(data))
+		//devlog("Asset: ", string(data))
 		//html, err := readAsset(vars, path)
 		//if err == nil {
 		//w.Header().Set("Content-Type", "text/html")
@@ -640,18 +667,18 @@ func readAsset(vars Vars, path string) (string, error) {
 	//_, err := ioutil.ReadFile(path)
 
 	//if err != nil {
-	//log.Println("Asset not found on path: " + path)
+	//devlog("Asset not found on path: " + path)
 	//return "", err
 	//}
 	//ti, errT := t.Parse(string(data))
 	//if errT != nil {
-	//log.Println("Parse fail", errT)
+	//devlog("Parse fail", errT)
 	//return "", err
 	//}
 
 	//err = ti.Execute(&doc, vars)
 	//if err != nil {
-	//log.Println("fail executing", err)
+	//devlog("fail executing", err)
 	//return "", err
 	//// Asset was not found.
 	//}
@@ -701,4 +728,11 @@ func gravatar(e, s string) string {
 
 func timeAgo(t time.Time) string {
 	return humanize.Time(t)
+}
+
+func devlog(v ...interface{}) {
+	fmt.Println("Dev:", Dev)
+	if Dev != "" {
+		log.Println(v)
+	}
 }
