@@ -185,7 +185,6 @@ func init() {
 }
 
 func main() {
-	devlog("lol")
 	router := httprouter.New()
 	router.POST("/publish/:name", func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		r.ParseForm()
