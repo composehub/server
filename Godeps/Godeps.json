@@ -1,6 +1,6 @@
 {
-	"ImportPath": "github.com/patcito/compositor",
-	"GoVersion": "go1.5rc1",
+	"ImportPath": "github.com/patcito/composehub",
+	"GoVersion": "go1.5",
 	"Deps": [
 		{
 			"ImportPath": "github.com/codegangsta/negroni",
@@ -8,16 +8,68 @@
 			"Rev": "c7477ad8e330bef55bf1ebe300cf8aa67c492d1b"
 		},
 		{
+			"ImportPath": "github.com/dustin/go-humanize",
+			"Rev": "c20a8bde38c8f5ba06f6600edf473705c96829d1"
+		},
+		{
+			"ImportPath": "github.com/extemporalgenome/slug",
+			"Rev": "0320c85e32e0015b090f08a5d1324d5ab6094f07"
+		},
+		{
+			"ImportPath": "github.com/ftrvxmtrx/gravatar",
+			"Rev": "5aaa334f4e974f251f8049520e0decd9b50ae53f"
+		},
+		{
+			"ImportPath": "github.com/go-sql-driver/mysql",
+			"Comment": "v1.2-26-g9543750",
+			"Rev": "9543750295406ef070f7de8ae9c43ccddd44e15e"
+		},
+		{
+			"ImportPath": "github.com/jinzhu/gorm",
+			"Rev": "447885d98f9d07a138733a0e65428dd2de1ed60d"
+		},
+		{
 			"ImportPath": "github.com/julienschmidt/httprouter",
 			"Rev": "46807412fe50aaceb73bb57061c2230fd26a1640"
 		},
 		{
-			"ImportPath": "github.com/nabeken/negroni-auth",
-			"Rev": "5853007f72d2795f27831057dd16151d41ae9645"
+			"ImportPath": "github.com/lib/pq/hstore",
+			"Rev": "7175accbed18058468c07811f76440d6e8d7cf19"
 		},
 		{
-			"ImportPath": "github.com/pmylund/go-cache",
-			"Rev": "93d85800f2fa6bd0a739e7bd612bfa3bc008b72d"
+			"ImportPath": "github.com/mholt/binding",
+			"Rev": "cb6c28ac11daf4a8a0ad10cbda1d38041b126d9b"
+		},
+		{
+			"ImportPath": "github.com/microcosm-cc/bluemonday",
+			"Rev": "2b7763a06cb6d740966c9a8e6a001eee9679be0e"
+		},
+		{
+			"ImportPath": "github.com/qor/inflection",
+			"Rev": "45321e63b98c756df17369c027c1df89298e1288"
+		},
+		{
+			"ImportPath": "github.com/russross/blackfriday",
+			"Comment": "v1.2-80-g8cec3a8",
+			"Rev": "8cec3a854e68dba10faabbe31c089abf4a3e57a6"
+		},
+		{
+			"ImportPath": "github.com/sendgrid/sendgrid-go",
+			"Comment": "v1.1.0-1-gb64fc06",
+			"Rev": "b64fc065d4d802822f6dc4ca9dde1456d3374836"
+		},
+		{
+			"ImportPath": "github.com/sendgrid/smtpapi-go",
+			"Comment": "v0.2.1-7-gf898c6a",
+			"Rev": "f898c6a004fb8d48ef1ef3d0e64917c0522ead1c"
+		},
+		{
+			"ImportPath": "github.com/shurcooL/sanitized_anchor_name",
+			"Rev": "9a8b7d4e8f347bfa230879db9d7d4e4d9e19f962"
+		},
+		{
+			"ImportPath": "github.com/unrolled/render",
+			"Rev": "cf57b1afa5d93abdbd356aad95d7c2720dad6d01"
 		},
 		{
 			"ImportPath": "golang.org/x/crypto/bcrypt",
@@ -28,6 +80,18 @@
 			"ImportPath": "golang.org/x/crypto/blowfish",
 			"Comment": "null-236",
 			"Rev": "master"
+		},
+		{
+			"ImportPath": "golang.org/x/net/html",
+			"Rev": "db8e4de5b2d6653f66aea53094624468caad15d2"
+		},
+		{
+			"ImportPath": "golang.org/x/text/transform",
+			"Rev": "505f8b49cc14d790314b7535959a10b87b9161c7"
+		},
+		{
+			"ImportPath": "golang.org/x/text/unicode/norm",
+			"Rev": "505f8b49cc14d790314b7535959a10b87b9161c7"
 		}
 	]
 }
