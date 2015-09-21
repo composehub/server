@@ -10,7 +10,6 @@
   <!-- Latest compiled and minified CSS -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-
   <!-- Optional theme -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 
@@ -27,7 +26,7 @@
     <div class="container">
       <!-- Brand and toggle get grouped for better mobile display -->
       <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navigation-collapse" aria-expanded="false">
+        <button type="button" class="navbar-toggle collapsed hidden-xs" data-toggle="collapse" data-target="#main-navigation-collapse" aria-expanded="false">
           <span class="sr-only">Toggle navigation</span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
@@ -39,7 +38,7 @@
       <!-- Collect the nav links, forms, and other content for toggling -->
 
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="https://github.com/composehub/cli#readme">Github</a></li>
+        <li><a href="https://github.com/composehub/cli#readme" class="xs-hidden hidden-xs">Github</a></li>
       </ul>
     </div><!-- /.container -->
   </nav>
@@ -67,7 +66,7 @@
                     </h1>
                   </div>
                   <div id=video-promo>
-                      <video controls autoplay muted loop width=703.5px>
+                      <video controls autoplay muted loop id=video-promo>
                           <source src="/composehub.webm" type="video/webm">
                           <source src="/composehub.mp4" type="video/mp4">
                           Your browser does not support the video tag.

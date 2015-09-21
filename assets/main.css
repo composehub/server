@@ -3,14 +3,45 @@ body {
     color: #767676;
     font-size: 15px;
 }
+@media (min-width: 768px){
 
 .container {
     width: 1170px;
 }
+.banner-box {
+    width: 60%;
+    left: 20%;
+    margin: auto;
+    bottom: 0;
+    padding: 20px;
+    border: 1px solid #656366;
+    height: 80px;
+}
+
+#video-promo {
+ width:703.5px;
+
+}
+}
+@media (max-width: 768px){
+
+#video-promo {
+ width:100%;
+
+}
+.banner-box {
+    width: 100%;
+    left: 20%;
+    margin: auto;
+    bottom: 0;
+    padding: 20px;
+    border: 1px solid #656366;
+}
+}
 
 .navbar-white {
     background: white;
-    border-bottom: 1px solid #dbdbdb;
+    border-bottom: 1px soluid #dbdbdb;
     border-top: 5px solid #683594;
      padding: 10px 6px;
 }
@@ -58,15 +89,6 @@ section#user {
     font-weight: lighter;
 }
 
-.banner-box {
-    width: 60%;
-    left: 20%;
-    margin: auto;
-    bottom: 0;
-    padding: 20px;
-    border: 1px solid #656366;
-    height: 80px;
-}
 .box-text {
     font-size: 17px;
     font-weight: lighter;
