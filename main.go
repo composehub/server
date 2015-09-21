@@ -4,14 +4,17 @@ import (
 	"crypto/rand"
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"strings"
-	"text/template"
 	"time"
+
+	"github.com/microcosm-cc/bluemonday"
+	"github.com/russross/blackfriday"
 
 	"github.com/codegangsta/negroni"
 	"github.com/dustin/go-humanize"
@@ -57,6 +60,7 @@ type Package struct {
 	Description    string `json:"description" sql:"type:TEXT;"`
 	RepoUrl        string `json:"repo_url" sql:"type:varchar(2083);"`
 	Commit         string `json:"commit" sql:"type:varchar(255);"`
+	Cmd            string `json:"cmd" sql:"type:varchar(350);"`
 	Private        bool   `json:"private"`
 	User           User
 	UserId         int64 `json:"user_id"`
@@ -132,6 +136,7 @@ func init() {
 		"split":    split,
 		"gravatar": gravatar,
 		"timeAgo":  timeAgo,
+		"markDown": markDowner,
 	}
 	T["index.html"], _ = template.New("base.html").Funcs(funcs).ParseFiles("assets/index.html", "assets/base.html")
 	T["search.html"], _ = template.New("base.html").Funcs(funcs).ParseFiles("assets/search.html", "assets/base.html")
@@ -214,6 +219,7 @@ func main() {
 				} else {
 					pkg.UserId = user.Id
 					pkg.Private = postedpkg.Private
+					pkg.Cmd = postedpkg.Cmd
 					if postedpkg.Name != "" {
 						pkg.Name = slug.Slug(postedpkg.Name)
 					}
@@ -625,6 +631,52 @@ func main() {
 		}
 
 	})
+	router.GET("/composehub.webm", func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+		path := "assets/composehub.webm"
+		data, err := ioutil.ReadFile(path)
+
+		if err != nil {
+			devlog("Asset not found on path: " + path)
+		} else {
+			w.Header().Set("Content-Type", "video/webm")
+			w.Write(data)
+
+		}
+
+	})
+
+	router.GET("/composehub.mp4", func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+		path := "assets/composehub.mp4"
+		data, err := ioutil.ReadFile(path)
+
+		if err != nil {
+			devlog("Asset not found on path: " + path)
+		} else {
+			w.Header().Set("Content-Type", "video/mp4")
+			w.Write(data)
+
+		}
+
+	})
+
+	router.GET("/install/:os", func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+		os := p.ByName("os")
+		if os != "darwin" && os != "linux" && os != "windows" {
+			R.JSON(w, http.StatusNotFound, "build not found")
+			return
+		}
+		path := "assets/ch-" + os + "-amd64"
+		data, err := ioutil.ReadFile(path)
+
+		if err != nil {
+			devlog("Asset not found on path: " + path)
+		} else {
+			w.Header().Set("Content-Type", "octet-stream")
+			w.Write(data)
+
+		}
+
+	})
 
 	router.GET("/checkupdate/:version", func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 		latest := "0.2"
@@ -659,7 +711,7 @@ func main() {
 	n := negroni.Classic()
 	//n.Use(auth.Basic("username", "secretpassword"))
 	n.UseHandler(router)
-	n.Run(":3000")
+	n.Run(":3001")
 }
 
 func readAsset(vars Vars, path string) (string, error) {
@@ -734,4 +786,28 @@ func devlog(v ...interface{}) {
 	if Dev != "" {
 		log.Println(v)
 	}
+}
+
+func markDowner(args ...interface{}) template.HTML {
+	htmlFlags := 0
+	htmlFlags |= blackfriday.HTML_USE_XHTML
+	htmlFlags |= blackfriday.HTML_USE_SMARTYPANTS
+	htmlFlags |= blackfriday.HTML_SMARTYPANTS_FRACTIONS
+	htmlFlags |= blackfriday.HTML_SMARTYPANTS_LATEX_DASHES
+	renderer := blackfriday.HtmlRenderer(htmlFlags, "", "")
+	extensions := 0
+	extensions |= blackfriday.EXTENSION_NO_INTRA_EMPHASIS
+	extensions |= blackfriday.EXTENSION_TABLES
+	extensions |= blackfriday.EXTENSION_FENCED_CODE
+	extensions |= blackfriday.EXTENSION_AUTOLINK
+	extensions |= blackfriday.EXTENSION_STRIKETHROUGH
+	extensions |= blackfriday.EXTENSION_SPACE_HEADERS
+	extensions |= blackfriday.EXTENSION_HEADER_IDS
+	extensions |= blackfriday.EXTENSION_BACKSLASH_LINE_BREAK
+	extensions |= blackfriday.EXTENSION_HARD_LINE_BREAK
+
+	unsafe := blackfriday.Markdown([]byte(fmt.Sprintf("%s", args...)), renderer, extensions)
+	/*unsafe := blackfriday.MarkdownCommon([]byte(fmt.Sprintf("%s", args...)))*/
+	s := bluemonday.UGCPolicy().SanitizeBytes(unsafe)
+	return template.HTML(s)
 }

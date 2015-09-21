@@ -41,7 +41,6 @@ section#user {
 }
 
 .home-banner {
-    height: 200px;
     position: relative;
 }
 
@@ -62,10 +61,11 @@ section#user {
 .banner-box {
     width: 60%;
     left: 20%;
-    position: absolute;
+    margin: auto;
     bottom: 0;
     padding: 20px;
     border: 1px solid #656366;
+    height: 80px;
 }
 .box-text {
     font-size: 17px;
@@ -510,4 +510,38 @@ li.user-img img {
 
 .user-box a:hover {
     color: #683594;
+}
+
+#video-promo {
+    margin: auto;
+    text-align: center;
+}
+
+.code-preview{
+background: #ffffff; overflow:auto;width:auto;padding:.2em .6em;
+width: 65%;
+margin: auto;
+}
+
+.code-preview pre{
+margin: 0 0 25px 0;
+line-height: 125%;
+}
+
+.code-preview span, pre{
+background-color: #333;
+color: #999;
+font-size: 18px;
+font-weight: bold;
+
+}
+
+.prompt{
+font-weight: bold;
+color: #FFF !important;
+}
+#linux-install, #darwin-install, #windows-install {
+  display: none;
+  text-align: center;
+  font-size: 16px;
 }

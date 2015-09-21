@@ -16,7 +16,7 @@
 
           <div class="package-header">
             <span class="title-package">{{.Package.Name}}</span>
-            <span class="label label-default label-package">Public</span>
+            <span class="label label-default label-package hide">Public</span>
             <div class="small-text-package">
               By <a href="/~{{.User.Handle}}">{{.User.Handle}}</a></a>
             <span>|</span>
@@ -29,7 +29,7 @@
 
 
       <p class="package-description">
-      {{.Package.Description}}
+      {{.Package.Description | markDown}}
       </p>
     </div>
 
@@ -37,7 +37,7 @@
 
       <div class="composehub-install-wrapper">
         <span class="fa fa-download"></span>
-        <span class="composehub-install">composehub install {{.Package.Name}}</span>
+        <span class="composehub-install">ch install {{.Package.Name}}</span>
 
       </div>
 

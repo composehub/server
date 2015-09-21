@@ -10,7 +10,7 @@ web:
   build: .
   command: ./composehub
   ports:
-    - "3000:3000"
+    - "3001:3001"
   links:
     - db:mysql
 

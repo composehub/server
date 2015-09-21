@@ -39,7 +39,7 @@
       <!-- Collect the nav links, forms, and other content for toggling -->
 
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#">Github</a></li>
+        <li><a href="https://github.com/composehub/cli#readme">Github</a></li>
       </ul>
     </div><!-- /.container -->
   </nav>
@@ -59,30 +59,67 @@
                 <div class="home-text-section">
                   <div class="banner-text text-center">
                     <h1>
-                      <span class="main-tag-line">ComposeHub is the package manager for Docker-Compose</span><br>
-                      <span class="support-line">Lorem ipsum dolor sit amet</span>
+                      <span class="main-tag-line">ComposeHub a package manager for docker apps</span><br>
+                      <span class="support-line">Making it easy to discover and publish apps based on docker-compose.</span>
+                      <span class="support-line hide">
+                          curl -L https://github.com/docker/compose/releases/download/VERSION_NUM/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+                      </span>
                     </h1>
                   </div>
-                  <div class="banner-box">
-                    <div class="col-lg-8 col-md-7 box-text">
-                      Lorem ipsum dolor sit amet, lorem ipsum dolor sit amet
-                    </div>
-                    <div class="col-lg-4 col-md-5">
-                      <a href="#" class="btn btn-box btn-block btn-lg">see how it works</a>
-                    </div>
+                  <div id=video-promo>
+                      <video controls autoplay muted loop width=703.5px>
+                          <source src="/composehub.webm" type="video/webm">
+                          <source src="/composehub.mp4" type="video/mp4">
+                          Your browser does not support the video tag.
+                      </video>
                   </div>
+                  <div class="code-preview">
+                      <pre>
+<span id="darwin-install">curl -L https://composehub.com/install/darwin > /usr/local/bin/ch</span>
+<span id="linux-install">curl -L https://composehub.com/install/linux > /usr/local/bin/ch</span>
+<span id="windows-install">curl -L https://composehub.com/install/windows > /usr/local/bin/ch</span>
+                      </pre>
+                  </div>
+
+                  <div class="code-preview hide">
+                      <pre>
+<span class="prompt">$ ch search gitlab</span> 
+<span>Searching for gitlab on https://composehub.org...</span>
+<span>gitlab: Create, review and deploy code together (by patcito)</span>
+<span>found 1 package</span>
+                      </pre>
+                  </div>
+<div class="code-preview hide">
+<pre>
+<span class=prompt>$ ch run gitlab</span>
+<span>Cloning into &#39;.&#39;</span>
+<span>remote: Counting objects: 7, done.</span>
+<span>remote: Total 7 (delta 0), reused 0 (delta 0), pack-reused 7</span>
+<span>Unpacking objects: 100% (7/7), done.</span>
+<span>...</span>
+<span>Running app. Open http://localhost:10080</span>
+</pre></div>
                 </div>
               </div>
 
             </div>
           </div>
-        </div>
+                    <div class="banner-box">
+                    <div class="col-lg-8 col-md-7 box-text">
+                        Search, install, run and publish docker apps in seconds.
+                    </div>
+                    <div class="col-lg-4 col-md-5">
+                      <a href="https://github.com/composehub/cli#readme" class="btn btn-box btn-block btn-lg">see how it works</a>
+                    </div>
+                  </div>
+
+      </div>
 
         <div class="home-search-section">
           <div class="container-fluid">
             <div class="col-md-10 col-md-offset-1 search-label-wrap">
               <div class="label-for-search col-md-4 clearfix">
-                <h5>LOOKING FOR A NEW EXPERIENCE?</h5>
+                <h5>LOOKING FOR A NEW APP?</h5>
               </div>
               <div class="col-md-8">
                 <div class="search-input-wrap">
@@ -121,8 +158,20 @@ localStorage.setItem("collapseJumbotron", "true");
 event.preventDefault()
 return false;
 });
+$(function(){
+         var os = navigator.platform;
+         if (os.indexOf("Linux")>-1){
+            $("#linux-install").show();
+         return;
+         } else if (os.indexOf("Mac")>-1){
+            $("#darwin-install").show();
+         return;
+         } else if (os.indexOf("Win")>-1){
+            $("#windows-install").show();
+         return;
+         }
+         })
   </script>
-
-    </body>
-    </html>
-    {{end}}
+  </body>
+  </html>
+  {{end}}
