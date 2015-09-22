@@ -284,6 +284,7 @@ line-height: 1.5;
     width: 50px;
     height: 50px;
     padding: 8px;
+    margin-top: 10px;
     background: #fff;
     color: #fff;
     text-align: center;
@@ -602,4 +603,8 @@ color: #FFF !important;
   display: none;
   text-align: center;
   font-size: 16px;
+}
+.text {
+  margin-top: 8px;
+
 }
