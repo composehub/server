@@ -105,7 +105,7 @@
           </div>
                     <div class="banner-box">
                     <div class="col-md-7 col-lg-8 box-text">
-                        Search, install, run and publish docker apps in seconds <span class="hidden-xs">with the simple composehub cli</span>.
+                        Search, install, run and publish docker apps in seconds<span class="hidden-xs"> with the simple composehub cli</span>.
                     </div>
                     <div class="col-md-5 col-lg-4">
                       <a href="https://github.com/composehub/cli#readme" class="btn btn-box btn-block btn-lg">see how it works</a>
@@ -122,7 +122,7 @@
               </div>
               <div class="col-md-8">
                 <div class="search-input-wrap">
-                  <form action="/hsearch" method="GET">
+                  <form action="/hsearch#search-form" id="search-form" method="GET">
                     <div class="form-group has-feedback">
 
                       <input type="text" class="form-control form-search" placeholder="Find Packages" name="q">
@@ -130,9 +130,6 @@
                       <span id="inputSuccess2Status" class="sr-only">(search)</span>
                     </div>
                   </form>
-                  <div id="dropdownsearchlist" class="result-for-events">
-                    <div class="label-for-search"></div>
-                  </div>
                 </div>
               </div>
             </div>

@@ -63,9 +63,6 @@ section#user {
     .package-title {
     margin-bottom: 25px !important;
 }
-.box li {
-    line-height: 1.8 !important;
-}
 }
 
 .navbar-white {
@@ -191,6 +188,7 @@ section#user {
 .header-features.first {
     margin-top: 50px;
 }
+@media (min-width: 768px){
 .feature-item-0, .feature-item-1,.feature-item-2{
     border-bottom: 1px solid #eee;
 }
@@ -198,7 +196,14 @@ section#user {
     border-left: 1px solid #eee;
     border-right: 1px solid #eee;
 }
-.header-features .feature-item {
+}
+@media (max-width: 768px){
+.feature-item-0, .feature-item-1,.feature-item-2,.feature-item-3,.feature-item-4,.feature-item-5,.feature-item-6,.feature-item-7,
+.feature-item-8,.feature-item-9{
+    border-bottom: 1px solid #eee;
+}
+}
+}.header-features .feature-item {
     padding-bottom: 10px;
     padding-top: 10px;
 }
@@ -377,7 +382,7 @@ line-height: 1.5;
 }
 
 .box li {
-    line-height: 2.5;
+    line-height: 1.8;
     overflow: hidden;
     text-overflow: ellipsis;
 }
