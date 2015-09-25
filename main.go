@@ -164,16 +164,16 @@ func init() {
 	if DbURL == "" {
 		DbURL = "localhost"
 	}
-	db, err := gorm.Open("mysql", DbUser+":"+DbPass+"@tcp("+DbURL+":3306)/?charset=utf8mb4&parseTime=True&loc=Local")
+	db, err := gorm.Open("mysql", DbUser+":"+DbPass+"@tcp("+DbURL+":3306)/"+DbName+"?charset=utf8mb4&parseTime=True&loc=Local")
 	if err != nil {
 		devlog(DbUser + ":" + DbPass + "@" + DbURL + "/" + DbName + "?charset=utf8mb4&parseTime=True&loc=Local")
 		log.Fatalln(err)
 	}
-	db.Exec("CREATE DATABASE if not exists `" + DbName + "` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci")
-	err = db.Exec("USE " + DbName).Error
-	if err != nil {
-		panic(err)
-	}
+	/*db.Exec("CREATE DATABASE if not exists `" + DbName + "` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci")*/
+	/*err = db.Exec("USE " + DbName).Error*/
+	/*if err != nil {*/
+	/*panic(err)*/
+	/*}*/
 	db.DB()
 	DB = db
 	if Dev != "" {
