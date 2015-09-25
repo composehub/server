@@ -26,7 +26,7 @@
 		},
 		{
 			"ImportPath": "github.com/jinzhu/gorm",
-			"Rev": "447885d98f9d07a138733a0e65428dd2de1ed60d"
+			"Rev": "198fc47051ff189b046a9bf8acee1964c23b9fc4"
 		},
 		{
 			"ImportPath": "github.com/julienschmidt/httprouter",
@@ -43,10 +43,6 @@
 		{
 			"ImportPath": "github.com/microcosm-cc/bluemonday",
 			"Rev": "2b7763a06cb6d740966c9a8e6a001eee9679be0e"
-		},
-		{
-			"ImportPath": "github.com/qor/inflection",
-			"Rev": "45321e63b98c756df17369c027c1df89298e1288"
 		},
 		{
 			"ImportPath": "github.com/russross/blackfriday",
