@@ -27,9 +27,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.1987929"
-     inkscape:cx="225.75818"
-     inkscape:cy="451.79515"
+     inkscape:zoom="1"
+     inkscape:cx="238.82759"
+     inkscape:cy="391.23519"
      inkscape:document-units="px"
      inkscape:current-layer="g3101"
      showgrid="false"
@@ -75,17 +75,43 @@
       <text
          xml:space="preserve"
          style="font-size:93.45794678px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#683594;fill-opacity:0.94117647;stroke:none;font-family:Sans"
-         x="2426.6238"
-         y="1084.8438"
+         x="2275.1853"
+         y="1081.6387"
          id="text77142-1-6"
          sodipodi:linespacing="125%"
-         inkscape:export-filename="/home/katcita/src/github.com/patcito/composehub/assets/logo.png"
-         inkscape:export-xdpi="90"
-         inkscape:export-ydpi="90"><tspan
+         inkscape:export-filename="/home/katcita/src/github.com/patcito/composehub/assets/ch_logo.png"
+         inkscape:export-xdpi="169.99573"
+         inkscape:export-ydpi="169.99573"><tspan
            sodipodi:role="line"
            id="tspan77144-3-9"
-           x="2426.6238"
-           y="1084.8438"
+           x="2275.1853"
+           y="1081.6387"
+           style="font-style:normal;font-weight:bold;fill:#683594;fill-opacity:0.94117647">CH</tspan></text>
+      <rect
+         style="fill:#ffffff;fill-opacity:0.94117647000000004;stroke:none"
+         id="rect78040"
+         width="172.89844"
+         height="172.89844"
+         x="2488.6277"
+         y="997.91931"
+         ry="0"
+         inkscape:export-filename="/home/katcita/src/github.com/patcito/composehub/assets/ch_logo.png"
+         inkscape:export-xdpi="169"
+         inkscape:export-ydpi="169" />
+      <text
+         xml:space="preserve"
+         style="font-size:93.45794678px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#683594;fill-opacity:0.94117647;stroke:none;font-family:Sans"
+         x="2502.6538"
+         y="1116.4675"
+         id="text77142-1-6-9"
+         sodipodi:linespacing="125%"
+         inkscape:export-filename="/home/katcita/src/github.com/patcito/composehub/assets/ch_logo.png"
+         inkscape:export-xdpi="169.99573"
+         inkscape:export-ydpi="169.99573"><tspan
+           sodipodi:role="line"
+           id="tspan77144-3-9-4"
+           x="2502.6538"
+           y="1116.4675"
            style="font-style:normal;font-weight:bold;fill:#683594;fill-opacity:0.94117647">CH</tspan></text>
     </g>
   </g>
