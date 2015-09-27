@@ -659,6 +659,20 @@ func main() {
 
 	})
 
+	router.GET("/favicon.ico", func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+		path := "assets/favicon.ico"
+		data, err := ioutil.ReadFile(path)
+
+		if err != nil {
+			devlog("Asset not found on path: " + path)
+		} else {
+			w.Header().Set("Content-Type", "image/x-icon")
+			w.Write(data)
+
+		}
+
+	})
+
 	router.GET("/install/:os", func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 		os := p.ByName("os")
 		if os != "darwin" && os != "linux" && os != "windows" {
